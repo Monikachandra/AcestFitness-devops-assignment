@@ -1,4 +1,4 @@
-name: ACEest Fitness CI Pipeline
+name: ACEest Fitness Tests
 
 on:
   push:
@@ -11,40 +11,40 @@ on:
       - main
 
 jobs:
-  build-and-lint:
+  linting:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Setup python env
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - name: Install Dependencies
+      - name: Install stuff
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Lint with flake8
+      - name: Run Flake8
         run: |
           flake8 app.py tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 app.py tests/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          flake8 app.py tests/ --count --exit-zero --max-complexity=10 --max-line-length=127
 
-  docker-and-test:
-    needs: build-and-lint
+  test-in-docker:
+    needs: linting
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Build Docker Image
+      - name: Docker Build
         run: |
           docker build -t aceest-fitness:latest .
 
-      - name: Run Pytest inside Container
+      - name: Run tests
         run: |
-          docker run --rm aceest-fitness:latest pytest tests/
+          docker run --rm aceest-fitness:latest python -m pytest tests/

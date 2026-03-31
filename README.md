@@ -1,32 +1,24 @@
-# ACEest Fitness & Gym - DevOps Pipeline Assignment
+# ACEest Fitness & Gym DevOps Project
 
-## Project Overview
-This project demonstrates a complete end-to-end DevOps CI/CD workflow for **ACEest Fitness & Gym**. The project leverages a robust tech stack to ensure code integrity, consistent environments, automated testing, and rapid delivery. This repository encompasses application development, containerization, and continuous integration pipelines using both GitHub Actions and Jenkins, specifically designed for a remote VM-based environment (CodeArgo RDP).
+This repository contains the complete DevOps CI/CD pipeline assignment for ACEest Fitness & Gym. The setup includes a Flask application moving through testing, containerization, and deployment via Jenkins and GitHub Actions.
 
-## Features
-- **Flask REST API**: Provides a health check endpoint and fitness program details.
-- **Automated Testing**: Comprehensive assertions using `pytest`.
-- **Docker Containerization**: Portable, lightweight Python-based container image.
-- **GitHub Actions Pipeline**: Automated CI on push and pull requests.
-- **Jenkins CI/CD Pipeline**: Full end-to-end pipeline running inside the VM.
-- **SonarQube Quality Gate**: Static code analysis integration.
+Everything is configured specifically to run inside the CodeArgo RDP VM.
 
-## Tech Stack
-- **Application**: Python 3.9, Flask
-- **Testing**: Pytest, Pytest-cov
-- **Containerization**: Docker
-- **Continuous Integration**: Jenkins, GitHub Actions
-- **Static Code Analysis**: SonarQube
-- **Version Control**: Git, GitHub
+### Project Components
 
-## Project Structure
+- **Flask App**: A small API with a health check and fitness program endpoints.
+- **Tests**: Pytest suite for verifying the endpoints.
+- **Docker**: Container configuration to package the application.
+- **GitHub Actions**: Automated linting and testing on code push.
+- **Jenkins Pipeline**: The primary CI/CD pipeline covering build, test, SonarQube analysis, Docker packaging, and smoke tests.
+- **SonarQube**: Code quality checks.
+
+### Directory Layout
+
 ```text
-ACEest_Fitness_DevOps/
-├── .github/
-│   └── workflows/
-│       └── main.yml
-├── tests/
-│   └── test_app.py
+.
+├── .github/workflows/main.yml
+├── tests/test_app.py
 ├── app.py
 ├── requirements.txt
 ├── Dockerfile
@@ -35,98 +27,48 @@ ACEest_Fitness_DevOps/
 └── README.md
 ```
 
-## Setup Instructions (VM-Based Environment)
+### Setup Guide (VM Only)
 
-**IMPORTANT CONTEXT**: This project is designed exclusively for the remote VM (CodeArgo RDP) environment provided for the course. All executions stay within the VM. **Do NOT run this locally.** All references to "localhost" pertain to the VM environment.
+Please run all commands inside the CodeArgo VM (`cloud` / `cloud`), not on a local machine.
 
-### 1. Initial Authentication & Git Setup
-Log in to the VM via your browser.
-**Username**: `cloud` 
-**Password**: `cloud`
+1. **Running locally (Without Docker)**
 
-Open a terminal inside the VM and configure your Git credentials:
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
-```
+To test the app directly on the VM environment:
 
-### 2. Version Control Initialization
-Create your project repository locally inside the VM:
-```bash
-mkdir -p ~/ACEest_Fitness_DevOps
-cd ~/ACEest_Fitness_DevOps
-
-git init
-
-git add .
-git commit -m "Initial commit: App setup, Docker, and CI pipelines"
-```
-Create a GitHub repository and link it:
-```bash
-git remote add origin https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPOSITORY.git
-git branch -M main
-git push -u origin main
-```
-
-## Application Usage & Testing
-
-### How to Run the Application (Locally in VM without Docker)
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 python app.py
 ```
-**Sample API Outputs**:
-- `curl http://localhost:5000/`
-  *Response*: `{"status": "healthy", "message": "ACEest Fitness & Gym API is up and running!"}`
-- `curl http://localhost:5000/programs`
-  *Response*: `{"BG": {"calorie_factor": 26, "name": "Beginner"}, "FL": {"calorie_factor": 22, "name": "Fat Loss"}, "MG": {"calorie_factor": 35, "name": "Muscle Gain"}}`
 
-### How to Run Tests
+Test the endpoints:
+- `curl http://localhost:5000/` (Health check)
+- `curl http://localhost:5000/programs` (Returns Beginner, Fat Loss, and Muscle Gain programs)
+
+To run the unit tests:
+
 ```bash
 pytest tests/
 ```
 
-### Docker Usage
-If you prefer running via Docker in the VM:
+2. **Running with Docker**
+
 ```bash
 docker build -t aceest-fitness:latest .
-
-docker run -d -p 5000:5000 --name aceest-container aceest-fitness:latest
-
-docker run --rm aceest-fitness:latest pytest tests/
+docker run -d -p 5000:5000 --name aceest-app aceest-fitness:latest
+docker run --rm aceest-fitness:latest python -m pytest tests/
 ```
 
-## CI/CD Architecture
+### CI/CD Pipelines
 
-### Jenkins Pipeline Explanation
-Jenkins runs locally inside the VM at `http://localhost:8080`.
-The `Jenkinsfile` defines the following stages:
-1. **Checkout**: Pulls the latest code.
-2. **Build Environment**: Creates a Python virtual environment and installs dependencies.
-3. **Run Tests**: Executes `pytest` and generates coverage metrics.
-4. **SonarQube Analysis**: Uses SonarScanner to analyze code quality and pushes reports to `http://localhost:9000`.
-5. **Build Docker Image**: Containerizes the tested Flask application.
-6. **Run Container**: Runs the application on port 5000.
-7. **API Smoke Tests**: Executes `curl` against the deployed endpoints.
-8. **Cleanup**: Stops and removes the Docker container and cleans the workspace.
+**Jenkins (http://localhost:8080)**
 
-#### SonarQube Integration
-- SonarQube runs inside the VM at `http://localhost:9000`.
-- Generate a token in SonarQube (`Administration` -> `Security` -> `Users` -> `Tokens`).
-- Add this token to Jenkins Credentials as a 'Secret text' with the ID `sonarqube-token`.
-- Configure the SonarQube Server in Jenkins Global Configuration as `sonar-vm` with URL `http://localhost:9000`.
-- Configure SonarScanner in Jenkins Global Tool Configuration as `SonarQubeScanner`.
+The Jenkins pipeline executes a series of automated continuous integration tasks to validate and deploy the code. The process starts by retrieving the latest source from GitHub. Then, it creates a dedicated Python virtual environment to execute the PyUnit test coverage. Once the tests pass, it triggers a static code analysis using SonarQube based on the configurations defined in `sonar-project.properties`.
+ The new container is then deployed and subjected to basic curl smoke tests against the root and programs endpoints. 
+Finally, the pipeline tears down the running test container and removes the local virtual environment to ensure a clean workspace for the next run.
 
-### GitHub Actions Workflow Explanation
-The `.github/workflows/main.yml` acts as the first layer of defense:
-1. **Trigger**: Runs on any `push` or `pull_request` to `main`, `feature/*`, or `bugfix/*`.
-2. **Build & Lint Stage**: Checks Python code for standard PEP-8 validation and syntax errors using `flake8`.
-3. **Docker Build & Test Stage**: Builds the Docker container, and explicitly runs the Pytest suite *inside* the newly built container to guarantee artifacts are intact.
 
-## Screenshots Documentation [PLACEHOLDER]
-1. GitHub Actions Passing state.
-2. Jenkins Pipeline Success Graph.
-3. SonarQube Project Dashboard.
-4. Output of endpoints using curl or browser.
+**GitHub Actions**
+
+This pipeline adds an extra layer of validation. On every push to GitHub, it runs `flake8` to check for syntax errors, builds the Docker image, and runs `pytest` inside the container. This ensures the code is healthy before it reaches the Jenkins pipeline.
