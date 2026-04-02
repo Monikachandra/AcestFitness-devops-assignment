@@ -19,16 +19,9 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage('SonarQube Scan') {
             steps {
-                withSonarQubeEnv('sonar-vm') {
-                    sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \\
-                        -Dsonar.projectKey=aceest-fitness \\
-                        -Dsonar.sources=app.py \\
-                        -Dsonar.python.coverage.reportPaths=coverage.xml \\
-                        -Dsonar.host.url=http://localhost:9000 \\
-                        -Dsonar.login=${SONAR_TOKEN}"
-                }
+                sh '/opt/sonar-scanner/bin/sonar-scanner'
             }
         }
 

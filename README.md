@@ -11,7 +11,7 @@ Everything is configured specifically to run inside the CodeArgo RDP VM.
 - **Docker**: Container configuration to package the application.
 - **GitHub Actions**: Automated linting and testing on code push.
 - **Jenkins Pipeline**: The primary CI/CD pipeline covering build, test, SonarQube analysis, Docker packaging, and smoke tests.
-- **SonarQube**: Code quality checks.
+- **SonarQube**: Code quality checks configured via `sonar-project.properties`.
 
 ### Directory Layout
 
