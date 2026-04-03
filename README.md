@@ -27,20 +27,37 @@ Everything is configured specifically to run inside the CodeArgo RDP VM.
 └── README.md
 ```
 
-### Setup Guide (VM Only)
+### Local Setup (run on localhost)
 
-Please run all commands inside the CodeArgo VM (`cloud` / `cloud`), not on a local machine.
+#### 1) Create and activate a virtual environment
 
-1. **Running locally (Without Docker)**
-
-To test the app directly on the VM environment:
-
+**macOS / Linux:**
 ```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate
+```
+
+**Windows (PowerShell):**
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+#### 2) Install dependencies
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+#### 3) Run the application
+```bash
 python app.py
 ```
+
+The app will start on:
+- http://localhost:5000
+- http://127.0.0.1:5000
+
 
 Test the endpoints:
 - `curl http://localhost:5000/` (Health check)
