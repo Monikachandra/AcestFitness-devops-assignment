@@ -1,91 +1,84 @@
 # ACEest Fitness & Gym DevOps Project
 
-This repository contains the complete DevOps CI/CD pipeline assignment for ACEest Fitness & Gym. The setup includes a Flask application moving through testing, containerization, and deployment via Jenkins and GitHub Actions.
+This repository contains the complete DevOps CI/CD pipeline assignment for **ACEest Fitness & Gym**. The project demonstrates a production-grade automated deployment workflow, transitioning a Flask application from local development through containerization and multi-layered validation.
 
-Everything is configured specifically to run inside the CodeArgo RDP VM.
+## 🏗 High-Level Architecture
 
-### Project Components
-
-- **Flask App**: A small API with a health check and fitness program endpoints.
-- **Tests**: Pytest suite for verifying the endpoints.
-- **Docker**: Container configuration to package the application.
-- **GitHub Actions**: Automated linting and testing on code push.
-- **Jenkins Pipeline**: The primary CI/CD pipeline covering build, test, SonarQube analysis, Docker packaging, and smoke tests.
-- **SonarQube**: Code quality checks configured via `sonar-project.properties`.
-
-### Directory Layout
-
-```text
-.
-├── .github/workflows/main.yml
-├── tests/test_app.py
-├── app.py
-├── requirements.txt
-├── Dockerfile
-├── Jenkinsfile
-├── sonar-project.properties
-└── README.md
+```mermaid
+graph TD
+    A[Local Development] -->|Git Push| B[GitHub Repository]
+    B -->|Trigger| C[GitHub Actions]
+    B -->|Poll SCM| D[Jenkins CI Server]
+    
+    subgraph "Validation Layer 1: GitHub Actions"
+        C1[Linting: Flake8] --> C2[Docker Assembly]
+        C2 --> C3[In-Container Tests: Pytest]
+    end
+    
+    subgraph "Validation Layer 2: Jenkins Build & Quality Gate"
+        D1[Checkout] --> D2[Static Analysis: SonarQube]
+        D2 --> D3[Docker Build]
+        D3 --> D4[Environment Testing: Pytest + Coverage]
+        D4 --> D5[Artifact: Docker Image]
+    end
 ```
 
-### Local Setup (run on localhost)
+## 🛠 Project Components
 
-#### 1) Create and activate a virtual environment
+- **Source Code**: A modular Flask API (`app.py`) managing fitness programs.
+- **Unit Testing Framework**: Comprehensive Pytest suite (`tests/`) ensuring logic integrity.
+- **Infrastructure as Code**:
+  - `Dockerfile`: Highly optimized image for consistent environment execution.
+  - `main.yml`: Automated GitHub Actions pipeline for immediate feedback.
+- **Jenkins Pipeline**: Orchestrates the primary "Build & Quality Gate" phase, integrating SonarQube for static code analysis.
 
+## 🚀 Local Setup & Execution
+
+### 1) Virtual Environment Setup
 **macOS / Linux:**
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 ```
-
 **Windows (PowerShell):**
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 ```
 
-#### 2) Install dependencies
+### 2) Installation & Execution
 ```bash
 python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-```
-
-#### 3) Run the application
-```bash
+pip install -r requirements.txt
 python app.py
 ```
+The application will be accessible at: `http://localhost:5000`
 
-The app will start on:
-- http://localhost:5000
-- http://127.0.0.1:5000
+## 🧪 Testing & Validation
 
-
-Test the endpoints:
-- `curl http://localhost:5000/` (Health check)
-- `curl http://localhost:5000/programs` (Returns Beginner, Fat Loss, and Muscle Gain programs)
-
-To run the unit tests:
-
+### Manual Execution
+To run the full suite of unit tests locally:
 ```bash
 pytest tests/
 ```
 
-2. **Running with Docker**
-
+### Containerized Testing
+To verify the application behavior within its production environment:
 ```bash
 docker build -t aceest-fitness:latest .
-docker run -d -p 5000:5000 --name aceest-app aceest-fitness:latest
 docker run --rm aceest-fitness:latest python -m pytest tests/
 ```
 
-### CI/CD Pipelines
+## ⚙️ CI/CD Integration Logic
 
-**Jenkins (http://localhost:8080)**
+### GitHub Actions (Validation Layer 1)
+Triggered on every `push` and `pull_request` to the `main` branch. It ensures that no code is merged without passing syntax linting (`flake8`) and unit tests within the target Docker environment.
 
-The Jenkins pipeline executes a series of automated continuous integration tasks to validate and deploy the code. The process starts by retrieving the latest source from GitHub. Then, it creates a dedicated Python virtual environment to execute the PyUnit test coverage. Once the tests pass, it triggers a static code analysis using SonarQube based on the configurations defined in `sonar-project.properties`.
- The new container is then deployed and subjected to basic curl smoke tests against the root and programs endpoints. 
-Finally, the pipeline tears down the running test container and removes the local virtual environment to ensure a clean workspace for the next run.
+### Jenkins Pipeline (Build & Quality Gate)
+Configured to poll the repository for changes. It executes a rigorous lifecycle:
+1. **SonarQube Scan**: Analyzes code quality and security vulnerabilities using `sonar-project.properties`.
+2. **Environment Simulation**: Builds the Docker image and executes tests with code coverage reporting.
+3. **Artifact Generation**: Saves the validated Docker image for deployment.
 
-
-**GitHub Actions**
-
-This pipeline adds an extra layer of validation. On every push to GitHub, it runs `flake8` to check for syntax errors, builds the Docker image, and runs `pytest` inside the container. This ensures the code is healthy before it reaches the Jenkins pipeline.
+---
+**Author**: Junior DevOps Engineer - ACEest Fitness & Gym
