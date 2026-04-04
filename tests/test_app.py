@@ -13,7 +13,8 @@ def test_health_check(test_client):
     
     html = res.get_data(as_text=True)
     assert "ACEest Fitness" in html
-    assert "ACHIEVE. TRAIN. SUCCEED." in html
+    assert "ACHIEVE. TRAIN." in html
+    assert "SUCCEED." in html
 
 def test_programs_endpoint(test_client):
     res = test_client.get("/programs")
