@@ -25,12 +25,23 @@ graph TD
 
 ## 🛠 Project Components
 
-- **Source Code**: A modular Flask API (`app.py`) managing fitness programs.
+- **Source Code**: A modular Flask application (`app.py`) managing fitness programs with a premium web interface.
+- **UI & Templates**: 
+  - `templates/base.html`: Core design system using Glassmorphism and CSS variables.
+  - `templates/index.html`: Interactive landing page with dynamic program cards.
+  - `templates/client_detail.html`: Specialized detail view for individual fitness protocols.
 - **Unit Testing Framework**: Comprehensive Pytest suite (`tests/`) ensuring logic integrity.
 - **Infrastructure as Code**:
   - `Dockerfile`: Highly optimized image for consistent environment execution.
   - `main.yml`: Automated GitHub Actions pipeline for immediate feedback.
 - **Jenkins Pipeline**: Orchestrates the primary "Build & Quality Gate" phase, integrating SonarQube for static code analysis.
+
+## 🎨 UI & Design System
+
+The application now features a **premium "Glassmorphism" UI** designed for a modern user experience:
+- **Dark Mode Aesthetic**: Sleek dark backgrounds with vibrant accent gradients.
+- **Responsive Layout**: Designed to work across different screen sizes.
+- **Interactive Components**: Dynamic hover effects and intuitive navigation between program listings and detailed views.
 
 ## 🚀 Local Setup & Execution
 

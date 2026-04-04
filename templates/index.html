@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Home | ACEest Fitness{% endblock %}
+
+{% block content %}
+<style>
+    .hero {
+        text-align: center;
+        padding: 4rem 1rem;
+    }
+
+    .hero h1 {
+        font-size: 3.5rem;
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+        color: var(--text-muted);
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto;
+        margin-bottom: 2rem;
+    }
+
+    .programs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .program-card {
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .program-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--primary-color);
+    }
+
+    .program-card h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .program-card .badge {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        background: rgba(0, 210, 255, 0.1);
+        color: var(--primary-color);
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .program-card .description {
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+    }
+
+    .program-card.MG .badge { background: rgba(157, 80, 187, 0.1); color: var(--secondary-color); }
+    .program-card.BG .badge { background: rgba(255, 157, 108, 0.1); color: var(--accent-orange); }
+
+    .program-card .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .program-card .factor {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+</style>
+
+<div class="hero">
+    <h1>ACHIEVE. TRAIN. <span style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">SUCCEED.</span></h1>
+    <p>Premium fitness programs tailored for your specific goals. Start your transformation today.</p>
+    <a href="#programs" class="btn btn-primary">Browse Programs</a>
+</div>
+
+<div id="programs" class="programs-grid">
+    {% for code, details in programs.items() %}
+    <div class="glass-card program-card {{ code }}" onclick="location.href='/client/{{ code }}'">
+        <div class="badge">{{ code }}</div>
+        <h2>{{ details.name }}</h2>
+        <p class="description">Experience our world-class {{ details.name }} training protocol designed for maximum efficiency.</p>
+        <div class="card-footer">
+            <span class="factor">Calorie Factor: {{ details.calorie_factor }}</span>
+            <span class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.8rem;">View Details</span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ program.name }} Detail | ACEest Fitness{% endblock %}
+
+{% block content %}
+<style>
+    .detail-view {
+        max-width: 800px;
+        margin: 4rem auto;
+        padding: 3rem;
+    }
+
+    .detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+    }
+
+    .detail-header h1 {
+        font-size: 2.5rem;
+        background: linear-gradient(135deg, white, #ccc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .factor-badge {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        padding: 0.5rem 1rem;
+        border-radius: 12px;
+        background: rgba(0, 210, 255, 0.1);
+        border: 1px solid rgba(0, 210, 255, 0.2);
+    }
+
+    .detail-content {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        margin-bottom: 3rem;
+    }
+
+    .feature-list {
+        list-style: none;
+        margin-top: 2rem;
+    }
+
+    .feature-list li {
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: var(--text-main);
+    }
+
+    .feature-list li::before {
+        content: '✓';
+        color: var(--primary-color);
+        font-weight: 800;
+    }
+
+    .actions {
+        display: flex;
+        gap: 1rem;
+    }
+</style>
+
+<div class="glass-card detail-view">
+    <div class="detail-header">
+        <div>
+            <div style="color: var(--primary-color); font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px;">{{ code }} PROGRAM</div>
+            <h1>{{ program.name }}</h1>
+        </div>
+        <div class="factor-badge">{{ program.calorie_factor }}x</div>
+    </div>
+
+    <div class="detail-content">
+        <p>The <strong>{{ program.name }}</strong> strategy is a specialized protocol within the ACEest Fitness framework. It leverages a calorie factor of <strong>{{ program.calorie_factor }}</strong> to optimize metabolic activity and performance outcomes.</p>
+        
+        <ul class="feature-list">
+            <li>Personalized nutrition targets</li>
+            <li>Optimized recovery windows</li>
+            <li>Data-driven progression tracking</li>
+            <li>Full dashboard integration</li>
+        </ul>
+    </div>
+
+    <div class="actions">
+        <a href="/" class="btn btn-outline">← Back to Programs</a>
+        <button class="btn btn-primary" onclick="alert('Program enrollment coming soon!')">Enroll Now</button>
+    </div>
+</div>
+{% endblock %}

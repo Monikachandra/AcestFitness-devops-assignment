@@ -11,9 +11,9 @@ def test_health_check(test_client):
     res = test_client.get("/")
     assert res.status_code == 200
     
-    data = res.get_json()
-    assert data["status"] == "healthy"
-    assert "ACEest Fitness" in data["message"]
+    html = res.get_data(as_text=True)
+    assert "ACEest Fitness" in html
+    assert "ACHIEVE. TRAIN. SUCCEED." in html
 
 def test_programs_endpoint(test_client):
     res = test_client.get("/programs")
