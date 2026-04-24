@@ -2,7 +2,7 @@
 
 This repository contains the complete DevOps CI/CD pipeline assignment for **ACEest Fitness & Gym**. The project demonstrates a production-grade automated deployment workflow, transitioning a Flask application from local development through containerization and multi-layered validation.
 
-## 🏗 High-Level Architecture
+## High-Level Architecture
 
 ```mermaid
 graph TD
@@ -23,7 +23,7 @@ graph TD
     end
 ```
 
-## 🛠 Project Components
+## Project Components
 
 - **Source Code**: A modular Flask application (`app.py`) managing fitness programs with a premium web interface.
 - **UI & Templates**: 
@@ -36,14 +36,14 @@ graph TD
   - `main.yml`: Automated GitHub Actions pipeline for immediate feedback.
 - **Jenkins Pipeline**: Orchestrates the primary "Build & Quality Gate" phase, integrating SonarQube for static code analysis.
 
-## 🎨 UI & Design System
+## UI & Design System
 
 The application now features a **premium "Glassmorphism" UI** designed for a modern user experience:
 - **Dark Mode Aesthetic**: Sleek dark backgrounds with vibrant accent gradients.
 - **Responsive Layout**: Designed to work across different screen sizes.
 - **Interactive Components**: Dynamic hover effects and intuitive navigation between program listings and detailed views.
 
-## 🚀 Local Setup & Execution
+## Local Setup & Execution
 
 ### 1) Virtual Environment Setup
 **macOS / Linux:**
@@ -65,7 +65,7 @@ python app.py
 ```
 The application will be accessible at: `http://localhost:5000`
 
-## 🧪 Testing & Validation
+## Testing & Validation
 
 ### Manual Execution
 To run the full suite of unit tests locally:
@@ -80,7 +80,7 @@ docker build -t aceest-fitness:latest .
 docker run --rm aceest-fitness:latest python -m pytest tests/
 ```
 
-## ⚙️ CI/CD Integration Logic
+## CI/CD Integration Logic
 
 ### GitHub Actions (Validation Layer 1)
 Triggered on every `push` and `pull_request` to the `main` branch. It ensures that no code is merged without passing syntax linting (`flake8`) and unit tests within the target Docker environment.
@@ -90,6 +90,3 @@ Configured to poll the repository for changes. It executes a rigorous lifecycle:
 1. **SonarQube Scan**: Analyzes code quality and security vulnerabilities using `sonar-project.properties`.
 2. **Environment Simulation**: Builds the Docker image and executes tests with code coverage reporting.
 3. **Artifact Generation**: Saves the validated Docker image for deployment.
-
----
-**Author**: Junior DevOps Engineer - ACEest Fitness & Gym
